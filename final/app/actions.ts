@@ -1,21 +1,34 @@
-"use server"
+"use server";
 
-import { revalidatePath } from "next/cache"
-import { insertarAula } from "@/lib/db"
+import { revalidatePath } from "next/cache";
+import { insertarAula } from "@/lib/db";
 
-export async function crearTarea(formData: FormData) {
-  const titulo = formData.get("titulo")
-  const descripcion = formData.get("descripcion")
+export async function crearAula(formData: FormData) {
+  const n = formData.get("nombre");
+  const c = formData.get("capacidad");
+  const u = formData.get("ubicacion");
+  const r = formData.get("recursos_disponibles");
+  const e = formData.get("estado");
 
-  if (typeof titulo !== "string" || typeof descripcion !== "string") {
-    return
+  if (typeof n !== "string" || typeof c !== "string"|| typeof u !== "string"|| typeof r !== "string"|| typeof e !== "string") {
+    return;
   }
 
-  if (titulo.trim() === "" || descripcion.trim() === "") {
-    return
+if (typeof n !== "string" || typeof c !== "string"|| typeof u !== "string"|| typeof r !== "string"|| typeof e !== "string") {
+    return;
   }
 
-  await insertarTarea(titulo.trim(), descripcion.trim())
+  //converision a numero
+  let cP = parseInt(c,10);
 
-  revalidatePath("/gestor-tareas")
+  await insertarAula(
+    n.trim(), 
+    cP, 
+    u.trim(),       
+    r.trim(),       
+    e.trim()
+  );
+
+
+  revalidatePath("/reserva_aula");
 }
